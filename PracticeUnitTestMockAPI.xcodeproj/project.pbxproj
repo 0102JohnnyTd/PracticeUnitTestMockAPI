@@ -13,6 +13,7 @@
 		1C0210972A27FFEE0089F139 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C0210962A27FFEE0089F139 /* Preview Assets.xcassets */; };
 		1C02109E2A28E91F0089F139 /* PokemonList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02109D2A28E91F0089F139 /* PokemonList.swift */; };
 		1C0210A02A28E9450089F139 /* PokemonDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C02109F2A28E9450089F139 /* PokemonDetail.swift */; };
+		1C0210A22A29E2230089F139 /* PokemonListSampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0210A12A29E2230089F139 /* PokemonListSampleData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		1C0210962A27FFEE0089F139 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1C02109D2A28E91F0089F139 /* PokemonList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonList.swift; sourceTree = "<group>"; };
 		1C02109F2A28E9450089F139 /* PokemonDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonDetail.swift; sourceTree = "<group>"; };
+		1C0210A12A29E2230089F139 /* PokemonListSampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListSampleData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				1C0210912A27FFEB0089F139 /* ContentView.swift */,
 				1C02109D2A28E91F0089F139 /* PokemonList.swift */,
 				1C02109F2A28E9450089F139 /* PokemonDetail.swift */,
+				1C0210A12A29E2230089F139 /* PokemonListSampleData.swift */,
 				1C0210932A27FFEE0089F139 /* Assets.xcassets */,
 				1C0210952A27FFEE0089F139 /* Preview Content */,
 			);
@@ -146,6 +149,7 @@
 				1C0210922A27FFEB0089F139 /* ContentView.swift in Sources */,
 				1C0210902A27FFEB0089F139 /* PracticeUnitTestMockAPIApp.swift in Sources */,
 				1C0210A02A28E9450089F139 /* PokemonDetail.swift in Sources */,
+				1C0210A22A29E2230089F139 /* PokemonListSampleData.swift in Sources */,
 				1C02109E2A28E91F0089F139 /* PokemonList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
