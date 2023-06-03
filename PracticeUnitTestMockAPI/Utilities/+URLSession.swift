@@ -24,7 +24,7 @@ extension URLSession {
         self.dataTask(with: request) { data, response, error in
             if let response = response as? HTTPURLResponse {
                 let status = HTTPStatus(code: response.statusCode)
-
+                // 認証失敗時
                 if status == .unauthorized {
                     completion(.failure(HTTPError.unauthorized))
                 }
@@ -72,17 +72,20 @@ extension URLSession {
 
             if let response = response as? HTTPURLResponse {
                 let status = HTTPStatus(code: response.statusCode)
-
+                // 認証失敗
                 if status == .unauthorized {
                     throw HTTPError.unauthorized
                 }
+                // 成功
                 else if status.category == .success {
                     return data
                 }
+                // 失敗
                 else {
                     throw HTTPError.serverResponse(status, data)
                 }
             }
+            // 🍎これがあるとdataのreturnが不要になる理由が分からない。
             else {
                 throw HTTPError.httpError
             }
