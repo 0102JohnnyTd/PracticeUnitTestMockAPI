@@ -21,6 +21,7 @@
 		1CBE535C2A2A37DD002B2B4A /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE535B2A2A37DD002B2B4A /* APIError.swift */; };
 		1CBE535F2A2A3846002B2B4A /* +URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE535E2A2A3846002B2B4A /* +URLSession.swift */; };
 		1CBE53622A2A38CC002B2B4A /* HTTPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBE53612A2A38CC002B2B4A /* HTTPError.swift */; };
+		1CE3A2FC2A2FEC1500443817 /*  pokemonDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3A2FB2A2FEC1500443817 /*  pokemonDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		1CBE535B2A2A37DD002B2B4A /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		1CBE535E2A2A3846002B2B4A /* +URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+URLSession.swift"; sourceTree = "<group>"; };
 		1CBE53612A2A38CC002B2B4A /* HTTPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPError.swift; sourceTree = "<group>"; };
+		1CE3A2FB2A2FEC1500443817 /*  pokemonDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " pokemonDetailViewModel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				1C65E6642A2D44BD00D5115F /* PokemonListViewModel.swift */,
+				1CE3A2FB2A2FEC1500443817 /*  pokemonDetailViewModel.swift */,
 			);
 			name = ViewModel;
 			path = NetWork/ViewModel;
@@ -222,6 +225,7 @@
 				1CBE535F2A2A3846002B2B4A /* +URLSession.swift in Sources */,
 				1C0210A02A28E9450089F139 /* PokemonDetail.swift in Sources */,
 				1C0210A22A29E2230089F139 /* PokemonListSampleData.swift in Sources */,
+				1CE3A2FC2A2FEC1500443817 /*  pokemonDetailViewModel.swift in Sources */,
 				1CBE53552A2A32A3002B2B4A /* PokemonDetailSampleData.swift in Sources */,
 				1CBE535C2A2A37DD002B2B4A /* APIError.swift in Sources */,
 				1C02109E2A28E91F0089F139 /* PokemonList.swift in Sources */,

@@ -7,19 +7,19 @@
 
 import Foundation
 
-// 起動画面のドメインロジックを管理するViewModel
+/// 起動画面のドメインロジックを管理するViewModel
 final class PokemonListViewModel: ObservableObject {
     @Published var pokemonList: PokemonList?
     @Published var errorMMessage: String?
 
-    // 差し替えを容易にする為,APIModel本体ではなく、Protocol型を指定
+    /// 差し替えを容易にする為,APIModel本体ではなく、Protocol型を指定
     private let api: APIProtocol
 
     init(api: APIProtocol = MockAPI()) {
         self.api = api
     }
 
-    // 通信して値を取得して加工し、データバインディングしているpokemonListに渡す
+    ///  通信して値を取得して加工し、データバインディングしているpokemonListに渡す
     func fetchPokemonList() async {
         do {
             let list = try await api.fetchPokemonList()
@@ -34,12 +34,12 @@ final class PokemonListViewModel: ObservableObject {
         }
     }
 
-    // メインスレッド上で取得して加工した値をデータバインディングしているpokemonListに渡す
+    /// メインスレッド上で取得して加工した値をデータバインディングしているpokemonListに渡す
     @MainActor private func setUpPokemonList(pokemonList: PokemonList) {
         self.pokemonList = pokemonList
     }
 
-    // メインスレッド上で取得したエラーの値をデータバインディングしているerrorMessageに渡す
+    /// メインスレッド上で取得したエラーの値をデータバインディングしているerrorMessageに渡す
     @MainActor private func setErrorMessage(errorMessage: String) {
         self.errorMMessage = errorMessage
     }
