@@ -7,20 +7,40 @@
 
 import SwiftUI
 
+/// ポケモンの一覧を表示するView
 struct ContentView: View {
+    // データの発生源は外部である為、@ObservedObjectを使う
+    @ObservedObject private var pokemonListViewModel: PokemonListViewModel
+
+    init(pokemonListViewModel: PokemonListViewModel) {
+        self.pokemonListViewModel = pokemonListViewModel
+    }
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                if let pokemonList = pokemonListViewModel.pokemonList {
+                    List(pokemonList.results, id: \.name) { pokemon in
+                        NavigationLink(destination: PokemonDetailView(pokemon: pokemon)) {
+                            Text(pokemon.name)
+                        }
+                    }
+                    .navigationTitle("Pokemon List")
+                } else if let errorMessage = pokemonListViewModel.errorMMessage {
+                    Text(errorMessage)
+                } else {
+
+                }
+            }
+            .task {
+                await pokemonListViewModel.fetchPokemonList()
+            }
         }
-        .padding()
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(pokemonListViewModel: PokemonListViewModel(api: API()))
     }
 }

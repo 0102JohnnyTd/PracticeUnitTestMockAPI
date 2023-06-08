@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// ポケモンの詳細を表示するView
 struct PokemonDetailView: View {
     let pokemon: Pokemon
     @State var pokemonDetail: PokemonDetail?

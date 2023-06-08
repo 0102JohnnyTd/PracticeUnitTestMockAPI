@@ -11,7 +11,7 @@ import SwiftUI
 struct PracticeUnitTestMockAPIApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(pokemonListViewModel: PokemonListViewModel(api: MockAPI(apiError: .decodingFailed)))
         }
     }
 }
