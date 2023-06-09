@@ -9,6 +9,15 @@ import XCTest
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
+    // 取得したポケモンデータのテスト
+    func testPokemonList() async throws {
+        let viewModel = PokemonListViewModel(api: MockAPI())
+        // 参照透過なポケモンデータが返る
+        await viewModel.fetchPokemonList()
+        XCTAssertEqual(viewModel.pokemonList?.results[18].name, "rattata")
+        XCTAssertEqual(viewModel.pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+    }
+
         // 通信エラー時のテスト
         @MainActor
         func testCheckHttpErrorMessage() async throws {
