@@ -10,16 +10,18 @@ import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
-    private var subscriptions = Set<AnyCancellable>()
-
     // 取得したポケモンデータのテスト
     func testPokemonList() async throws {
-        let expectation = expectation(description: "$pokemonList")
+        var subscriptions = Set<AnyCancellable>()
+
+        let expectation = expectation(description: "pokemonList")
 
         let viewModel = PokemonListViewModel(api: MockAPI())
 
         viewModel.$pokemonList
             .dropFirst()
+            .prefix(1)
+            .receive(on: RunLoop.main)
             .sink { pokemonList in
                 XCTAssertEqual(pokemonList?.results[18].name, "rattata")
                 XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
@@ -36,12 +38,27 @@ final class PokemonListViewModelTests: XCTestCase {
     // 通信エラー時のテスト
     @MainActor
     func testCheckHttpErrorMessage() async throws {
-        // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
-        let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
-        await viewModel.fetchPokemonList()
         XCTContext.runActivity(named: "HTTPErrorに関して") { _ in
             XCTContext.runActivity(named: ".noNetWorkが生じた場合") { _ in
-                XCTAssertEqual(viewModel.errorMMessage, "DEBUG (noNetwork): A network connection could not be established.")
+                var subscriptions = Set<AnyCancellable>()
+
+                let expectation = expectation(description: "errorMMessage")
+
+                // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
+                let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
+
+                viewModel.$errorMMessage
+                    .dropFirst()
+                    .prefix(1)
+                    .receive(on: RunLoop.main)
+                    .sink { errorMessage in
+                        XCTAssertEqual(errorMessage, "DEBUG (noNetwork): A network connection could not be established.")
+                        expectation.fulfill()
+                    }.store(in: &subscriptions)
+
+                viewModel.fetchPokemonList()
+
+                wait(for: [expectation], timeout: 5)
             }
         }
     }
