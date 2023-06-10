@@ -6,30 +6,45 @@
 //
 
 import XCTest
+import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
+    private var subscriptions = Set<AnyCancellable>()
+
     // 取得したポケモンデータのテスト
     func testPokemonList() async throws {
+        let expectation = expectation(description: "$pokemonList")
+
         let viewModel = PokemonListViewModel(api: MockAPI())
+
+        viewModel.$pokemonList
+            .dropFirst()
+            .sink { pokemonList in
+                XCTAssertEqual(pokemonList?.results[18].name, "rattata")
+                XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+
+                expectation.fulfill()
+            }.store(in: &subscriptions)
+
         // 参照透過なポケモンデータが返る
-        await viewModel.fetchPokemonList()
-        XCTAssertEqual(viewModel.pokemonList?.results[18].name, "rattata")
-        XCTAssertEqual(viewModel.pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+        viewModel.fetchPokemonList()
+
+        wait(for: [expectation], timeout: 10)
     }
 
-        // 通信エラー時のテスト
-        @MainActor
-        func testCheckHttpErrorMessage() async throws {
-            // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
-            let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
-            await viewModel.fetchPokemonList()
-            XCTContext.runActivity(named: "HTTPErrorに関して") { _ in
-                XCTContext.runActivity(named: ".noNetWorkが生じた場合") { _ in
-                    XCTAssertEqual(viewModel.errorMMessage, "DEBUG (noNetwork): A network connection could not be established.")
-                }
+    // 通信エラー時のテスト
+    @MainActor
+    func testCheckHttpErrorMessage() async throws {
+        // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
+        let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
+        await viewModel.fetchPokemonList()
+        XCTContext.runActivity(named: "HTTPErrorに関して") { _ in
+            XCTContext.runActivity(named: ".noNetWorkが生じた場合") { _ in
+                XCTAssertEqual(viewModel.errorMMessage, "DEBUG (noNetwork): A network connection could not be established.")
             }
         }
+    }
 
     // パース失敗時のテスト
     @MainActor
