@@ -70,7 +70,7 @@ final class PokemonListViewModelTests: XCTestCase {
         // Decode失敗時の参照透過な値を返すMockを初期値にしたViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
         // 実際に通信は行わないが、仮想通信処理を実行
-        await viewModel.fetchPokemonList()
+        viewModel.fetchPokemonList()
         XCTContext.runActivity(named: "APIErrorに関して") { _ in
             XCTContext.runActivity(named: ".decodingFailedが生じた場合") { _ in
                 XCTAssertEqual(viewModel.errorMMessage, "デコードに失敗しました")
