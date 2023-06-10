@@ -27,22 +27,26 @@ final class PokemonListViewModel: ObservableObject {
                 await setUpPokemonList(pokemonList: list)
                 // 🍎localizedDescriptionをユーザーに表示させる意味を感じない。例えば通信エラーなら『通信環境を確認してください』とか表示させたい
             } catch let error as HTTPError {
-                setErrorMessage(errorMessage: error.localizedDescription)
+                await setErrorMessage(errorMessage: error.localizedDescription)
             } catch let error as APIError {
-                setErrorMessage(errorMessage: error.localizedDescription)
+                await setErrorMessage(errorMessage: error.localizedDescription)
             } catch {
-                setErrorMessage(errorMessage: "An unkwon error occurred.")
+                await setErrorMessage(errorMessage: "An unkwon error occurred.")
             }
         }
     }
 
     /// メインスレッド上で取得して加工した値をデータバインディングしているpokemonListに渡す
-    private func setUpPokemonList(pokemonList: PokemonList) {
-        self.pokemonList = pokemonList
+    private func setUpPokemonList(pokemonList: PokemonList) async {
+        await MainActor.run {
+            self.pokemonList = pokemonList
+        }
     }
 
     /// メインスレッド上で取得したエラーの値をデータバインディングしているerrorMessageに渡す
-    private func setErrorMessage(errorMessage: String) {
-        self.errorMMessage = errorMessage
+    private func setErrorMessage(errorMessage: String) async {
+        await MainActor.run {
+            self.errorMMessage = errorMessage
+        }
     }
 }
