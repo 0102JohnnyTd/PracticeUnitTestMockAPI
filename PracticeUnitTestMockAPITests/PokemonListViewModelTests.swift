@@ -10,10 +10,15 @@ import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
+    var cancellables = Set<AnyCancellable>()
+
+    override func setUp() {
+        super.setUp()
+        cancellables = []
+    }
+
     // 取得したポケモンデータのテスト
     func testPokemonList() async throws {
-        var subscriptions = Set<AnyCancellable>()
-
         let expectation = expectation(description: "pokemonList")
 
         let viewModel = PokemonListViewModel(api: MockAPI())
@@ -27,7 +32,7 @@ final class PokemonListViewModelTests: XCTestCase {
                 XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
 
                 expectation.fulfill()
-            }.store(in: &subscriptions)
+            }.store(in: &cancellables)
 
         // 参照透過なポケモンデータが返る
         viewModel.fetchPokemonList()
@@ -38,8 +43,6 @@ final class PokemonListViewModelTests: XCTestCase {
     // 通信エラー時のテスト
     @MainActor
     func testCheckHttpErrorMessage() async throws {
-        var subscriptions = Set<AnyCancellable>()
-
         let expectation = expectation(description: "errorMMessage")
 
         // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
@@ -52,7 +55,7 @@ final class PokemonListViewModelTests: XCTestCase {
             .sink { errorMessage in
                 XCTAssertEqual(errorMessage, "DEBUG (noNetwork): A network connection could not be established.")
                 expectation.fulfill()
-            }.store(in: &subscriptions)
+            }.store(in: &cancellables)
 
         viewModel.fetchPokemonList()
 
@@ -62,8 +65,6 @@ final class PokemonListViewModelTests: XCTestCase {
     // パース失敗時のテスト
     @MainActor
     func testCheckAPIErrorMessage() async throws {
-        var subscriptions = Set<AnyCancellable>()
-
         let expectation = expectation(description: "errorMMessage")
 
         // 🍏引数apiの型をprotocolにすることで指定するクラス/構造体の差し替えを容易にしている！
@@ -77,7 +78,7 @@ final class PokemonListViewModelTests: XCTestCase {
             .sink { errorMessage in
                 XCTAssertEqual(viewModel.errorMMessage, "デコードに失敗しました")
                 expectation.fulfill()
-            }.store(in: &subscriptions)
+            }.store(in: &cancellables)
 
         // 実際に通信は行わないが、仮想通信処理を実行
         viewModel.fetchPokemonList()
