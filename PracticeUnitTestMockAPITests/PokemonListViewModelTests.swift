@@ -6,46 +6,80 @@
 //
 
 import XCTest
+import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
-    // 取得したポケモンデータのテスト
-    func testPokemonList() async throws {
-        let viewModel = PokemonListViewModel(api: MockAPI())
-        // 参照透過なポケモンデータが返る
-        await viewModel.fetchPokemonList()
-        XCTAssertEqual(viewModel.pokemonList?.results[18].name, "rattata")
-        XCTAssertEqual(viewModel.pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+    var cancellables = Set<AnyCancellable>()
+
+    override func setUp() {
+        super.setUp()
+        cancellables = []
     }
 
-        // 通信エラー時のテスト
-        @MainActor
-        func testCheckHttpErrorMessage() async throws {
-            // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
-            let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
-            await viewModel.fetchPokemonList()
-            XCTContext.runActivity(named: "HTTPErrorに関して") { _ in
-                XCTContext.runActivity(named: ".noNetWorkが生じた場合") { _ in
-                    XCTAssertEqual(viewModel.errorMMessage, "DEBUG (noNetwork): A network connection could not be established.")
-                }
-            }
-        }
+    // 取得したポケモンデータのテスト
+    func testPokemonList() async throws {
+        let expectation = expectation(description: "pokemonList")
+
+        let viewModel = PokemonListViewModel(api: MockAPI())
+
+        viewModel.$pokemonList
+            .dropFirst()
+            .prefix(1)
+            .sink { pokemonList in
+                XCTAssertEqual(pokemonList?.results[18].name, "rattata")
+                XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+
+                expectation.fulfill()
+            }.store(in: &cancellables)
+
+        // 参照透過なポケモンデータが返る
+        viewModel.fetchPokemonList()
+
+        await fulfillment(of: [expectation], timeout: 3)
+    }
+
+    // 通信エラー時のテスト
+    @MainActor
+    func testCheckHttpErrorMessage() async throws {
+        let expectation = expectation(description: "errorMMessage")
+
+        // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
+        let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
+
+        viewModel.$errorMMessage
+            .dropFirst()
+            .prefix(1)
+            .sink { errorMessage in
+                XCTAssertEqual(errorMessage, "DEBUG (noNetwork): A network connection could not be established.")
+                expectation.fulfill()
+            }.store(in: &cancellables)
+
+        viewModel.fetchPokemonList()
+
+        await fulfillment(of: [expectation], timeout: 3)
+    }
 
     // パース失敗時のテスト
     @MainActor
     func testCheckAPIErrorMessage() async throws {
+        let expectation = expectation(description: "errorMMessage")
+
         // 🍏引数apiの型をprotocolにすることで指定するクラス/構造体の差し替えを容易にしている！
         // Decode失敗時の参照透過な値を返すMockを初期値にしたViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
+
+        viewModel.$errorMMessage
+            .dropFirst()
+            .prefix(1)
+            .sink { errorMessage in
+                XCTAssertEqual(errorMessage, "デコードに失敗しました")
+                expectation.fulfill()
+            }.store(in: &cancellables)
+
         // 実際に通信は行わないが、仮想通信処理を実行
-        await viewModel.fetchPokemonList()
-        XCTContext.runActivity(named: "APIErrorに関して") { _ in
-            XCTContext.runActivity(named: ".decodingFailedが生じた場合") { _ in
-                XCTAssertEqual(viewModel.errorMMessage, "デコードに失敗しました")
-            }
-        }
+        viewModel.fetchPokemonList()
+
+        await fulfillment(of: [expectation], timeout: 3)
     }
 }
-
-
-
