@@ -6,12 +6,30 @@
 //
 
 import XCTest
+import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
+    var cancellables = Set<AnyCancellable>()
+
+    override func setUp() {
+        super.setUp()
+        cancellables = []
+    }
     // 取得したポケモンデータのテスト
     func testPokemonList() async throws {
+        let expectation = expectation(description: "pokemonList")
         let viewModel = PokemonListViewModel(api: MockAPI())
+
+        viewModel.$pokemonList
+            .dropFirst()
+            .prefix(1)
+            .sink { pokemonList in
+                XCTAssertEqual(pokemonList?.results[18].name, "rattata")
+                XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+
+                expectation.fulfill()
+            }.store(in: &cancellables)
         // 参照透過なポケモンデータが返る
         await viewModel.fetchPokemonList()
         XCTAssertEqual(viewModel.pokemonList?.results[18].name, "rattata")
@@ -39,6 +57,7 @@ final class PokemonListViewModelTests: XCTestCase {
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
         // 実際に通信は行わないが、仮想通信処理を実行
         await viewModel.fetchPokemonList()
+        // TODO: runActivityメソッドXCTContextが分からないので調査
         XCTContext.runActivity(named: "APIErrorに関して") { _ in
             XCTContext.runActivity(named: ".decodingFailedが生じた場合") { _ in
                 XCTAssertEqual(viewModel.errorMMessage, "デコードに失敗しました")

@@ -20,17 +20,19 @@ final class PokemonListViewModel: ObservableObject {
     }
 
     ///  通信して値を取得して加工し、データバインディングしているpokemonListに渡す
-    func fetchPokemonList() async {
-        do {
-            let list = try await api.fetchPokemonList()
-            await setUpPokemonList(pokemonList: list)
-            // 🍎localizedDescriptionをユーザーに表示させる意味を感じない。例えば通信エラーなら『通信環境を確認してください』とか表示させたい
-        } catch let error as HTTPError {
-            await setErrorMessage(errorMessage: error.localizedDescription)
-        } catch let error as APIError {
-            await setErrorMessage(errorMessage: error.localizedDescription)
-        } catch {
-            await setErrorMessage(errorMessage: "An unkwon error occurred.")
+    func fetchPokemonList() {
+        Task {
+            do {
+                let list = try await api.fetchPokemonList()
+                await setUpPokemonList(pokemonList: list)
+                // 🍎localizedDescriptionをユーザーに表示させる意味を感じない。例えば通信エラーなら『通信環境を確認してください』とか表示させたい
+            } catch let error as HTTPError {
+                await setErrorMessage(errorMessage: error.localizedDescription)
+            } catch let error as APIError {
+                await setErrorMessage(errorMessage: error.localizedDescription)
+            } catch {
+                await setErrorMessage(errorMessage: "An unkwon error occurred.")
+            }
         }
     }
 
