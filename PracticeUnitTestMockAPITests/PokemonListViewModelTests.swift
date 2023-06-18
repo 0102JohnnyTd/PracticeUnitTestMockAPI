@@ -10,12 +10,8 @@ import Combine
 @testable import PracticeUnitTestMockAPI
 
 final class PokemonListViewModelTests: XCTestCase {
-    var cancellables = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
 
-    override func setUp() {
-        super.setUp()
-        cancellables = []
-    }
     // 取得したポケモンデータのテスト
     func testPokemonList() async throws {
         let expectation = expectation(description: "pokemonList")
@@ -29,11 +25,10 @@ final class PokemonListViewModelTests: XCTestCase {
                 XCTAssertEqual(pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
 
                 expectation.fulfill()
-            }.store(in: &cancellables)
+            }.store(in: &subscriptions)
         // 参照透過なポケモンデータが返る
-        await viewModel.fetchPokemonList()
-        XCTAssertEqual(viewModel.pokemonList?.results[18].name, "rattata")
-        XCTAssertEqual(viewModel.pokemonList?.results[18].url, "https://pokeapi.co/api/v2/pokemon/19/")
+        viewModel.fetchPokemonList()
+        wait(for: [expectation], timeout: 10)
     }
 
         // 通信エラー時のテスト
@@ -41,7 +36,7 @@ final class PokemonListViewModelTests: XCTestCase {
         func testCheckHttpErrorMessage() async throws {
             // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
             let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
-            await viewModel.fetchPokemonList()
+            viewModel.fetchPokemonList()
             XCTContext.runActivity(named: "HTTPErrorに関して") { _ in
                 XCTContext.runActivity(named: ".noNetWorkが生じた場合") { _ in
                     XCTAssertEqual(viewModel.errorMMessage, "DEBUG (noNetwork): A network connection could not be established.")
@@ -56,7 +51,7 @@ final class PokemonListViewModelTests: XCTestCase {
         // Decode失敗時の参照透過な値を返すMockを初期値にしたViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
         // 実際に通信は行わないが、仮想通信処理を実行
-        await viewModel.fetchPokemonList()
+        viewModel.fetchPokemonList()
         // TODO: runActivityメソッドXCTContextが分からないので調査
         XCTContext.runActivity(named: "APIErrorに関して") { _ in
             XCTContext.runActivity(named: ".decodingFailedが生じた場合") { _ in
