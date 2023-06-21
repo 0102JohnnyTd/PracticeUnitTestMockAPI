@@ -23,7 +23,6 @@ final class PokemonListViewModelTests: XCTestCase {
         let viewModel = PokemonListViewModel(api: MockAPI())
 
         viewModel.$pokemonList
-            .receive(on: RunLoop.main)
             .dropFirst()
             .prefix(1)
             .sink { pokemonList in
@@ -47,7 +46,6 @@ final class PokemonListViewModelTests: XCTestCase {
         let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
 
         viewModel.$errorMessage
-            .receive(on: RunLoop.main)
             .dropFirst()
             .prefix(1)
             .sink { errorMessage in
@@ -68,7 +66,6 @@ final class PokemonListViewModelTests: XCTestCase {
         // Decode失敗時の参照透過な値を返すMockを初期値にしたViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
         viewModel.$errorMessage
-            .receive(on: RunLoop.main)
             .dropFirst()
             .prefix(1)
             .sink { errorMessage in
