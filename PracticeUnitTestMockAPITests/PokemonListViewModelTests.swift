@@ -31,8 +31,8 @@ final class PokemonListViewModelTests: XCTestCase {
         wait(for: [expectation], timeout: 10)
     }
 
-        // 通信エラー時のテスト
-        @MainActor
+    // 通信エラー時のテスト
+    @MainActor
     func testCheckHttpErrorMessage() async throws {
         // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
