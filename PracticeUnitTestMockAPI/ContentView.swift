@@ -26,7 +26,7 @@ struct ContentView: View {
                         }
                     }
                     .navigationTitle("Pokemon List")
-                } else if let errorMessage = pokemonListViewModel.errorMMessage {
+                } else if let errorMessage = pokemonListViewModel.errorMessage {
                     Text(errorMessage)
                 } else {
 

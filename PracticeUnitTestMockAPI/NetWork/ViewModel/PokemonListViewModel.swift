@@ -10,7 +10,7 @@ import Foundation
 /// 起動画面のドメインロジックを管理するViewModel
 final class PokemonListViewModel: ObservableObject {
     @Published var pokemonList: PokemonList?
-    @Published var errorMMessage: String?
+    @Published var errorMessage: String?
 
     /// 差し替えを容易にする為,APIModel本体ではなく、Protocol型を指定
     private let api: APIProtocol
@@ -46,7 +46,7 @@ final class PokemonListViewModel: ObservableObject {
     /// 取得したエラーの値をデータバインディングしているerrorMessageに渡す
     private func setErrorMessage(errorMessage: String) async {
         await MainActor.run {
-            self.errorMMessage = errorMessage
+            self.errorMessage = errorMessage
         }
     }
 }

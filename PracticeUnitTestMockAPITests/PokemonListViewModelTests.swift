@@ -42,7 +42,7 @@ final class PokemonListViewModelTests: XCTestCase {
         // 通信環境なしで通信を実行した場合に発生するエラーを固定値として返すViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(httpError: .noNetwork))
 
-        viewModel.$errorMMessage
+        viewModel.$errorMessage
             .receive(on: RunLoop.main)
             .dropFirst()
             .prefix(1)
@@ -64,12 +64,12 @@ final class PokemonListViewModelTests: XCTestCase {
         // 🍏引数apiの型をprotocolにすることで指定するクラス/構造体の差し替えを容易にしている！
         // Decode失敗時の参照透過な値を返すMockを初期値にしたViewModelを生成
         let viewModel = PokemonListViewModel(api: MockAPI(apiError: .decodingFailed))
-        viewModel.$errorMMessage
+        viewModel.$errorMessage
             .receive(on: RunLoop.main)
             .dropFirst()
             .prefix(1)
             .sink { errorMessage in
-                XCTAssertEqual(viewModel.errorMMessage, "デコードに失敗しました")
+                XCTAssertEqual(viewModel.errorMessage, "デコードに失敗しました")
                 expectation.fulfill()
             }.store(in: &subscriptions)
 
