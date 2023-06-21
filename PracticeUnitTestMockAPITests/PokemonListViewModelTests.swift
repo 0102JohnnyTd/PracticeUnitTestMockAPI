@@ -29,7 +29,7 @@ final class PokemonListViewModelTests: XCTestCase {
         // 参照透過なポケモンデータが返る
         viewModel.fetchPokemonList()
 
-        await fulfillment(of: [expectation], timeout: 10)
+        await fulfillment(of: [expectation], timeout: 3)
     }
 
     // 通信エラー時のテスト
@@ -53,7 +53,7 @@ final class PokemonListViewModelTests: XCTestCase {
 
         viewModel.fetchPokemonList()
 
-        await fulfillment(of: [expectation], timeout: 10)
+        await fulfillment(of: [expectation], timeout: 3)
     }
 
     // パース失敗時のテスト
@@ -76,6 +76,6 @@ final class PokemonListViewModelTests: XCTestCase {
         // 実際に通信は行わないが、仮想通信処理を実行
         viewModel.fetchPokemonList()
 
-        await fulfillment(of: [expectation], timeout: 10)
+        await fulfillment(of: [expectation], timeout: 3)
     }
 }
