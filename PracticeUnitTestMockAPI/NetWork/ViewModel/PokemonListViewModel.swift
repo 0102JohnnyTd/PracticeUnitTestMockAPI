@@ -37,16 +37,14 @@ final class PokemonListViewModel: ObservableObject {
     }
 
     /// 取得して加工した値をデータバインディングしているpokemonListに渡す
-    private func setUpPokemonList(pokemonList: PokemonList) async {
-        await MainActor.run {
-            self.pokemonList = pokemonList
-        }
+    @MainActor
+    private func setUpPokemonList(pokemonList: PokemonList) {
+        self.pokemonList = pokemonList
     }
 
     /// 取得したエラーの値をデータバインディングしているerrorMessageに渡す
-    private func setErrorMessage(errorMessage: String) async {
-        await MainActor.run {
-            self.errorMessage = errorMessage
-        }
+    @MainActor
+    private func setErrorMessage(errorMessage: String) {
+        self.errorMessage = errorMessage
     }
 }
