@@ -11,7 +11,7 @@ import Combine
 
 final class PokemonListViewModelTests: XCTestCase {
     // 取得したポケモンデータのテスト
-    func testPokemonList() async throws {
+    func testPokemonList() throws {
         var subscriptions = Set<AnyCancellable>()
         let expectation = expectation(description: "pokemonList")
         let viewModel = PokemonListViewModel(api: MockAPI())
@@ -79,6 +79,3 @@ final class PokemonListViewModelTests: XCTestCase {
         }
     }
 }
-
-
-
