@@ -69,7 +69,7 @@ final class PokemonListViewModelTests: XCTestCase {
             .dropFirst()
             .prefix(1)
             .sink { errorMessage in
-                XCTAssertEqual(viewModel.errorMessage, "デコードに失敗しました")
+                XCTAssertEqual(errorMessage, "デコードに失敗しました")
                 expectation.fulfill()
             }.store(in: &cancellables)
 
