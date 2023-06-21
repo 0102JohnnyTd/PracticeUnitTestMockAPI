@@ -126,8 +126,8 @@
 		1C11CA5B2A31D09400D1ABC8 /* PracticeUnitTestMockAPITests */ = {
 			isa = PBXGroup;
 			children = (
-				1C11CA5C2A31D09400D1ABC8 /* PracticeUnitTestMockAPITests.swift */,
 				1C11CA632A31D0EF00D1ABC8 /* PokemonListViewModelTests.swift */,
+				1C11CA5C2A31D09400D1ABC8 /* PracticeUnitTestMockAPITests.swift */,
 			);
 			path = PracticeUnitTestMockAPITests;
 			sourceTree = "<group>";
